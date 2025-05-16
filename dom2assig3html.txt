@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Event Propagation</title>
+  <style>
+    .box {
+      padding: 20px;
+      margin: 10px;
+      border: 2px solid black;
+    }
+    #div1 {
+      background-color: #f8d7da;
+    }
+    #div2 {
+      background-color: #d4edda;
+    }
+    #div3 {
+      background-color: #d1ecf1;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="div1" class="box">
+    Div 1
+    <div id="div2" class="box">
+      Div 2
+      <div id="div3" class="box">
+        Div 3
+        <button id="btn3">Button 3</button>
+      </div>
+      <button id="btn2">Button 2</button>
+    </div>
+    <button id="btn1">Button 1</button>
+  </div>
+
+  <script>
+    
+    function addListener(id, name) {
+      const element = document.getElementById(id);
+
+      element.addEventListener("click", (e) => {
+        alert(`Capturing: ${name}`);
+      }, true); // true = capture phase
+
+      element.addEventListener("click", (e) => {
+        alert(`Bubbling: ${name}`);
+      });
+    }
+
+    addListener("div1", "Div 1");
+    addListener("div2", "Div 2");
+    addListener("div3", "Div 3");
+    addListener("btn1", "Button 1");
+    addListener("btn2", "Button 2");
+    addListener("btn3", "Button 3");
+
+    
+    document.getElementById("btn3").addEventListener("click", (e) => {
+      e.stopPropagation();
+      alert("Bubbling: Button 3 (Propagation Stopped)");
+    });
+  </script>
+
+</body>
+</html>
