@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Grid</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f4;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      width: 80%;
+    }
+    .product {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    .inStock {
+      background-color: #d4edda;
+    }
+    .outOfStock {
+      background-color: #f8d7da;
+    }
+    .price {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="grid" id="productGrid"></div>
+
+  <script>
+    const products = [
+      { id: 1, name: "Product A", price: 50, inStock: true },
+      { id: 2, name: "Product B", price: 30, inStock: false },
+      { id: 3, name: "Product C", price: 70, inStock: true },
+      { id: 4, name: "Product D", price: 20, inStock: false }
+    ];
+
+    const productGrid = document.getElementById('productGrid');
+
+    products.forEach(product => {
+    
+      const productDiv = document.createElement('div');
+      productDiv.classList.add('product');
+      productDiv.classList.add(product.inStock ? 'inStock' : 'outOfStock');
+
+      const productName = document.createElement('h3');
+      productName.textContent = product.name;
+
+      const productPrice = document.createElement('p');
+      productPrice.classList.add('price');
+      productPrice.textContent = `$${product.price}`;
+
+      const stockStatus = document.createElement('p');
+      stockStatus.textContent = product.inStock ? 'In Stock' : 'Out of Stock';
+
+      productDiv.appendChild(productName);
+      productDiv.appendChild(productPrice);
+      productDiv.appendChild(stockStatus);
+
+      productGrid.appendChild(productDiv);
+    });
+  </script>
+
+</body>
+</html>
