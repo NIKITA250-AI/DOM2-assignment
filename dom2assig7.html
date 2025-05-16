@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Grid</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f4;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      width: 80%;
+    }
+    .product-card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      text-align: center;
+      padding: 15px;
+      transition: transform 0.3s;
+    }
+    .product-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    .product-card h3 {
+      font-size: 18px;
+      color: #333;
+      margin: 10px 0;
+    }
+    .product-card p {
+      font-size: 16px;
+      color: #777;
+    }
+    .product-card .price {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    .yellow-border {
+      border: 2px solid yellow;
+    }
+    .green-border {
+      border: 2px solid green;
+    }
+    .product-card:hover {
+      transform: translateY(-10px);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="product-grid" id="product-grid"></div>
+
+  <script>
+    
+    fetch('https://fakestoreapi.com/products')
+      .then(response => response.json())
+      .then(data => {
+        const productGrid = document.getElementById('product-grid');
+        
+        data.forEach(product => {
+          const productCard = document.createElement('div');
+          productCard.classList.add('product-card');
+          
+          if (product.price > 50) {
+            productCard.classList.add('yellow-border');
+          } else {
+            productCard.classList.add('green-border');
+          }
+          productCard.innerHTML = `
+            <img src="${product.image}" alt="${product.title}">
+            <h3>${product.title}</h3>
+            <p class="price">$${product.price}</p>
+          `;
+
+          productGrid.appendChild(productCard);
+        });
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  </script>
+
+</body>
+</html>
