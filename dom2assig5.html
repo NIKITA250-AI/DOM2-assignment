@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Advanced Task Manager</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+    }
+    #taskInput {
+      width: 200px;
+      padding: 5px;
+    }
+    button {
+      margin: 5px;
+      padding: 5px 10px;
+    }
+    .task {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px;
+      border-bottom: 1px solid #ccc;
+    }
+    .completed {
+      text-decoration: line-through;
+      color: gray;
+    }
+    .filters {
+      margin-top: 15px;
+    }
+    .counters {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Advanced Task Manager</h2>
+  <input id="taskInput" type="text" placeholder="Enter task">
+  <button id="addTaskBtn">Add Task</button>
+  <button id="sortBtn">Sort Alphabetically</button>
+
+  <div class="filters">
+    <button data-filter="all">All Tasks</button>
+    <button data-filter="completed">Completed</button>
+    <button data-filter="incomplete">Incomplete</button>
+  </div>
+
+  <div class="counters">
+    <span>Total: <span id="totalCount">0</span></span> |
+    <span>Completed: <span id="completedCount">0</span></span> |
+    <span>Incomplete: <span id="incompleteCount">0</span></span>
+  </div>
+
+  <ul id="taskList"></ul>
+
+  <script>
+    const taskInput = document.getElementById('taskInput');
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    const sortBtn = document.getElementById('sortBtn');
+    const taskList = document.getElementById('taskList');
+    const filterButtons = document.querySelectorAll('[data-filter]');
+    const totalCount = document.getElementById('totalCount');
+    const completedCount = document.getElementById('completedCount');
+    const incompleteCount = document.getElementById('incompleteCount');
+
+    let tasks = [];
+    let currentFilter = 'all';
+
+    function renderTasks() {
+      taskList.innerHTML = '';
+
+      let filteredTasks = tasks;
+      if (currentFilter === 'completed') {
+        filteredTasks = tasks.filter(t => t.completed);
+      } else if (currentFilter === 'incomplete') {
+        filteredTasks = tasks.filter(t => !t.completed);
+      }
+
+      filteredTasks.forEach((task, index) => {
+        const li = document.createElement('li');
+        li.className = 'task';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = task.completed;
+        checkbox.dataset.index = index;
+        checkbox.className = 'toggle';
+
+        const span = document.createElement('span');
+        span.textContent = task.text;
+        if (task.completed) span.classList.add('completed');
+
+        const delBtn = document.createElement('button');
+        delBtn.textContent = 'Delete';
+        delBtn.dataset.index = index;
+        delBtn.className = 'delete';
+
+        li.appendChild(checkbox);
+        li.appendChild(span);
+        li.appendChild(delBtn);
+
+        taskList.appendChild(li);
+      });
+
+      updateCounters();
+    }
+
+    function updateCounters() {
+      totalCount.textContent = tasks.length;
+      completedCount.textContent = tasks.filter(t => t.completed).length;
+      incompleteCount.textContent = tasks.filter(t => !t.completed).length;
+    }
+
+    addTaskBtn.addEventListener('click', () => {
+      const text = taskInput.value.trim();
+      if (text) {
+        tasks.push({ text, completed: false });
+        taskInput.value = '';
+        renderTasks();
+      }
+    });
+
+    sortBtn.addEventListener('click', () => {
+      tasks = tasks.slice().sort((a, b) => a.text.localeCompare(b.text));
+      renderTasks();
+    });
+
+    taskList.addEventListener('click', (e) => {
+      const index = e.target.dataset.index;
+      if (e.target.classList.contains('delete')) {
+        tasks.splice(index, 1);
+      } else if (e.target.classList.contains('toggle')) {
+        tasks[index].completed = !tasks[index].completed;
+      }
+      renderTasks();
+    });
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentFilter = btn.dataset.filter;
+        renderTasks();
+      });
+    });
+
+    taskInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') addTaskBtn.click();
+    });
+
+  </script>
+
+</body>
+</html>
